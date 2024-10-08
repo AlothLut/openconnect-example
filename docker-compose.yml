@@ -1,0 +1,26 @@
+---
+networks:
+  vpn:
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.22.22.0/24
+          gateway: 172.22.22.1
+
+services:
+  openconnect:
+    build: .
+    image: openconnect
+    container_name: openconnect
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    hostname: openconnect
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - 42443:443/tcp
+      - 42443:443/udp
+    networks:
+      vpn:
+        ipv4_address: 172.22.22.22
